@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 
-import 'package:sql_flite/add_student_widget.dart';
-import 'package:sql_flite/mode/data_model.dart';
 
 
 

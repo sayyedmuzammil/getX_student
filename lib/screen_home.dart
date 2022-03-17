@@ -40,7 +40,9 @@ class ScreenHome extends StatelessWidget {
                 icon: Icon(Icons.home)), // Leading icon with function
             leadingWidth: 50.0, // Width of leading icon
           ),
-          body: Obx(() => Scaffold(body: _pages[fetchControl.currentSelected.value],
+          body: Obx(() => Scaffold(
+                 resizeToAvoidBottomInset: false, 
+            body: _pages[fetchControl.currentSelected.value],
                     bottomNavigationBar:  BottomNavigationBar(
                           selectedLabelStyle: TextStyle(),
                           currentIndex: fetchControl.currentSelected.value,

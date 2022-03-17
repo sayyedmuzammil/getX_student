@@ -8,7 +8,7 @@ class screen_add extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("000 in screen add out");
+    // print("000 in screen add out");
     // getAllStudents();
     return SafeArea(
       child: Padding(

@@ -224,7 +224,7 @@ class AddStudentWidget extends StatelessWidget {
         _std.isEmpty ||
         _address.isEmpty || fetchControl.imageTemporary==''
       ) {
-          print("errooooooooooor");
+          // print("errooooooooooor");
       showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -247,7 +247,7 @@ control.UpdateStudent(_student);
  
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (ctx) => ScreenHome( currentSelected: fetchControl.indexChanged(0) ,data: null,),
+        builder: (ctx) => ScreenHome( /* currentSelected: fetchControl.indexChanged(0) ,data: null, */),
       ),
     );
   }
@@ -279,7 +279,7 @@ control.UpdateStudent(_student);
 
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
-                                        builder: (ctx) => ScreenHome(data: null, currentSelected: 0,),
+                                        builder: (ctx) => ScreenHome( /* currentSelected: fetchControl.indexChanged(0) ,data: null, */),
                                       ),
                                     );
   }

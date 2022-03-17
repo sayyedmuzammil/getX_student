@@ -19,7 +19,7 @@ class screen_main extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // AddStudentWidget(),
+
 
              Expanded(child: ListStudentWidget()),
           ],

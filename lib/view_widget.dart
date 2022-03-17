@@ -1,16 +1,11 @@
-// import 'dart:io';
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sql_flite/add_student_widget.dart';
-
-import 'mode/db_functions.dart';
-import 'package:sql_flite/controller.dart';
+import 'package:sql_flite/mode/data_model.dart';
 
 class viewStudentWidget extends StatelessWidget {
-  final int? edit;
+  final StudentModel? edit;
 
    viewStudentWidget({this.edit});
 
@@ -30,8 +25,15 @@ class viewStudentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
-DataInsetion(edit); 
+  
+  if (edit != null) {
+      _nameController.text = edit!.name!;
+      _ageController.text = edit!.age.toString();
+      _stdController.text = edit!.standard!;
+      _addressController.text = edit!.address!;
+      fetchControl.imageTemporary.value=edit!.profile;
+    }
+ 
     return Scaffold(
       appBar: AppBar(
         title: Text("Student Details"), // title of AppBar
@@ -69,16 +71,19 @@ DataInsetion(edit);
 
                               child: Container(
                                 alignment: Alignment(0.0, 2.5),
-                                child: CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage:
-
-                                     fetchControl.imageTemporary.value == ""?
-                                    NetworkImage("https://cdn2.iconfinder.com/data/icons/avatars-99/62/avatar-371-456323-512.png"):
-                                    Image.file(
-                                            File(fetchControl.imageTemporary.toString()))
-                                       .image,
-                                ),
+                                child: Obx(() => 
+                            
+                            CircleAvatar(
+                                radius: 50,
+                                       backgroundImage:fetchControl.imageTemporary==''? (edit != null)
+                                    ? Image.file(File(edit!.profile.toString()))
+                                        .image
+                                    : NetworkImage(
+                                        "https://cdn2.iconfinder.com/data/icons/avatars-99/62/avatar-371-456323-512.png"):  
+                                         Image.file(File(fetchControl.imageTemporary.toString()))
+                                        .image),
+                                      
+                                        )
                               ),
                             ),
                           ],
@@ -122,20 +127,7 @@ DataInsetion(edit);
                           ),
                         ),
                         const SizedBox(height: 10),
-                        // Container(
-                        //   // width: 97,
-
-                        //   child: ElevatedButton.icon(
-                        //     onPressed: () {
-                        //       // onUpdateStudentButton(widget.edit);
-                        //  Navigator.of(context).pop();
-
-                        //       // showAlertDialogue(context);
-                        //     },
-                        //     icon: const Icon(Icons.arrow_back_ios_new),
-                        //     label: const Text('GO BACK'),
-                        //   ),
-                        // ),
+   
                       ],
                     ),
                   ),
@@ -148,29 +140,4 @@ DataInsetion(edit);
     );
   }
 
-  Future<void> DataInsetion(studentid) async {
-    //  int counter=0;
-    print("555 $studentid");
-    if (studentid == null || studentid == 0) {
-     fetchControl.imageTemporary.value="";
-     return;
-    }
-    final student = await control.FetchData(studentid);
-    print("returned from fetching");
-    print(student);
-
-    _nameController.text = student.name;
-    _ageController.text = student.age.toString();
-    _stdController.text = student.standard;
-    _addressController.text = student.address;
-    // imageTemporary = await student.profile;
-fetchControl.DataInsetion1(studentid);
-    // print(imageTemporary);
-    //  await counter++;
-    // setState(() {
-      
-    // });
-
- 
-  }
 }

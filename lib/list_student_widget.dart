@@ -1,5 +1,6 @@
 // import 'dart:io';
 import 'dart:io';
+import 'package:sql_flite/add_student_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,8 +19,7 @@ class ListStudentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("555 here"); 
-    
- 
+     
          
         return Obx(() => ListView.separated(
           itemBuilder: (ctx, index) {
@@ -29,11 +29,10 @@ class ListStudentWidget extends StatelessWidget {
               title: Text('${data.name}'),
               subtitle: Text(data.age.toString()),
 
-              // leading: data.profile!=null?
               leading: CircleAvatar(
                 backgroundImage: Image.file(File(data.profile as String)).image,
               ),
-              // CircleAvatar(backgroundImage: AssetImage('assets/images/avatar.jpg'),),
+           
 
               trailing: currentPage == 0
                   ? Container(
@@ -41,21 +40,20 @@ class ListStudentWidget extends StatelessWidget {
                       width: 97,
                       child: Row(children: [
                         IconButton(
-                          onPressed: () {
+                          onPressed: () { 
+                            // fetchControl.fetchImg(data.profile);
                             if (data.id != null) {
-                          
-                              Navigator.push(
+                          fetchControl.currentSelected.value=2;
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) => ScreenHome(
-                                            currentSelected: 2,
-                                            id: data.id,
+                                            currentSelected : 2,
+                                           
+                                           data: data,
                                           )));
 
-                              //  AddStudentWidget(edit: data.id);
-                              // setState(() {
-                              //   // AddStudentWidget(edit: data.id,);
-                              // });
+                          
                             } else {
                               print('id is ${data.id}');
                               print("cant edit");
@@ -69,12 +67,9 @@ class ListStudentWidget extends StatelessWidget {
                         IconButton(
                           onPressed: () {
                             if (data.id != null) {
-                              print(data.id);
+                            
                               control.deleteStudent(data.id!);
                               // setState(() {});
-                            } else {
-                              print('id is ${data.id}');
-                              print("cant delete");
                             }
                           },
                           icon: Icon(
@@ -93,7 +88,7 @@ class ListStudentWidget extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (ctx) => viewStudentWidget(
-                                          edit: data.id,
+                                          edit: data,
                                         )));
                             // deleteStudent(data.id!);
                             // setState(() {});

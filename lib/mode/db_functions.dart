@@ -4,17 +4,17 @@ import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'data_model.dart';
 
-ValueNotifier<List<StudentModel>> studentListNotifier = ValueNotifier([]);
+// ValueNotifier<List<StudentModel>> studentListNotifier = ValueNotifier([]);
 late Database _db;
 
 class Controller extends GetxController {
   List<StudentModel> studentListNotifier = <StudentModel>[].obs;
 
   List<Map<String, dynamic>> students = <Map<String, dynamic>>[].obs;
-  List<Map<String, dynamic>> searchItems = <Map<String, dynamic>>[].obs;
+  // List<Map<String, dynamic>> searchItems = <Map<String, dynamic>>[].obs;
  
 Future<void> openDB() async {
-  _db = await openDatabase('student.db', version: 1,
+  _db = await openDatabase('student10.db', version: 1,
       onCreate: (Database db, int version) async {
     await db.execute(
         'CREATE TABLE student (id INTEGER PRIMARY KEY, name TEXT, age INTEGER, standard TEXT, address TEXT, profile TEXT)');
@@ -39,29 +39,33 @@ Future<void> SearchStudent(searchedName) async {
   // if
   searched_student.forEach((map) {
     final Single_student = StudentModel.fromMap(map);
+      studentListNotifier.add(Single_student);
     // studentListNotifier.value.add(Single_student);
     // studentListNotifier.notifyListeners();
   });
+   students.clear(); 
+     students.addAll(searched_student);
 }
 
 Future<void> getAllStudents() async {
   // studentListNotifier.value.clear();
   final _values = await _db.rawQuery('SELECT * FROM student');
-  print("this is all values in db $_values");
+  // print("this is all values in db $_values");
   if (_values.isNotEmpty) {
     _values.forEach((map) {
       final Single_student = StudentModel.fromMap(map);
       studentListNotifier.add(Single_student);
       // studentListNotifier.notifyListeners();
-      students.clear(); 
-     students.addAll(_values);
-     update();
+  
+    //  update();
     });
   } else {
     print("error alert");
-    var alert = "no values in db";
+    // var alert = "no values in db";
   }
-  print("666 $students"); 
+      students.clear(); 
+     students.addAll(_values);
+  // print("666 $students"); 
 }
 
 _displayDialog(BuildContext context) {}

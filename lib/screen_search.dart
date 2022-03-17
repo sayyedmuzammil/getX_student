@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sql_flite/mode/data_model.dart';
 import 'list_student_widget.dart';
 import 'search_student_widget.dart';
 
 class screen_search extends StatelessWidget {
-  screen_search({this.id = 0});
-  int? id;
+  screen_search({this.data});
+  StudentModel? data;
 
   @override
   Widget build(BuildContext context) {

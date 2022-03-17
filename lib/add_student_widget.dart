@@ -18,9 +18,9 @@ final fetchControl = Get.put(FetchController());
 final control = Get.put(Controller());
 
 class AddStudentWidget extends StatelessWidget {
-  final int? edit;
+  final StudentModel? edit;
 
-  AddStudentWidget({this.edit = 0});
+  AddStudentWidget({this.edit=null});
 
   final _nameController = TextEditingController();
 
@@ -30,36 +30,24 @@ class AddStudentWidget extends StatelessWidget {
 
   final _addressController = TextEditingController();
 
-// final _imageController =TextEditingController();
 
-// String fetchControl.student.imageTemporary="/data/user/0/com.example.sql_flite/cache/image_picker8166399740605715662.jpg";//photo from phone
-  // String fetchControl.student.imageTemporary =""; //photo from emulator
-
-  // @override
-  // void () {
-  //   DataInsetion(edit);
-  //   //innitail value of text field
-  //   // setState(() {});
-  //   // super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
-    print("the id is ");
-    print("${edit}, ${fetchControl.imageTemporary} ");
+    print("7777 $edit ");
     if (edit != null) {
-      DataInsetion(edit);
+      _nameController.text = edit!.name!;
+      _ageController.text = edit!.age.toString();
+      _stdController.text = edit!.standard!;
+      _addressController.text = edit!.address!;
+      fetchControl.imageTemporary.value=edit!.profile;
     }
-    // setState(() {});
 
-    print("body of this page.................");
-    // print(form_edit);
 
     return Container(
       margin: EdgeInsets.only(top: 10, left: 0),
       child: Container(
-        //  height:MediaQuery.of(context).size.height,
-        // width: MediaQuery.of(context).size.width,
+
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(
@@ -77,18 +65,22 @@ class AddStudentWidget extends StatelessWidget {
                         children: [
                           Container(
                             alignment: Alignment(0.0, 2.5),
-                            child: Obx(() => CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: fetchControl
-                                              .imageTemporary ==
-                                          ""
-                                      ? NetworkImage(
-                                          "https://cdn2.iconfinder.com/data/icons/avatars-99/62/avatar-371-456323-512.png")
-                                      : Image.file(File(fetchControl
-                                              .imageTemporary
-                                              .toString()))
-                                          .image,
-                                )),
+                          
+                            child: Obx(() => 
+                            
+                            CircleAvatar(
+                                radius: 50,
+                                
+                                backgroundImage:fetchControl.imageTemporary==''? (edit != null)
+                                    ? Image.file(File(edit!.profile.toString()))
+                                        .image
+                                    : NetworkImage(
+                                        "https://cdn2.iconfinder.com/data/icons/avatars-99/62/avatar-371-456323-512.png"):  
+                                         Image.file(File(fetchControl.imageTemporary.toString()))
+                                        .image),
+                                      
+                                        )
+                            
                           ),
                           SizedBox(
                             height: 15,
@@ -182,9 +174,8 @@ class AddStudentWidget extends StatelessWidget {
 
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    onAddorUpdateStudentButton(context);
-                                    //  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=> ScreenHome(),),);
-                                    // showAlertDialogue(context);
+                                    onAddStudentButton(context);
+                                  
                                   },
                                   icon: const Icon(Icons.add),
                                   label: const Text('Add Student'),
@@ -195,9 +186,9 @@ class AddStudentWidget extends StatelessWidget {
 
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    onAddorUpdateStudentButton(
+                                    onUpdateStudentButton(
                                       context,
-                                      id: edit,
+                                      id: edit!.id,
                                     );
 
                                     // showAlertDialogue(context);
@@ -218,19 +209,22 @@ class AddStudentWidget extends StatelessWidget {
     );
   }
 
-  Future<void> onAddorUpdateStudentButton(BuildContext context, {id}) async {
+  Future<void> onUpdateStudentButton(BuildContext context, {id}) async {
+  print("update                       or             add ${fetchControl.imageTemporary}  \n id : $id");
+  
     final _name = _nameController.text.trim();
     final _age = _ageController.text.trim();
     final _std = _stdController.text.trim();
     final String _address = _addressController.text.trim();
 
-    studentListNotifier.notifyListeners();
+    // studentListNotifier.notifyListeners();
 
     if (_name.isEmpty ||
         _age.isEmpty ||
         _std.isEmpty ||
-        _address.isEmpty ||
-        fetchControl.imageTemporary == "") {
+        _address.isEmpty || fetchControl.imageTemporary==''
+      ) {
+          print("errooooooooooor");
       showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -238,23 +232,27 @@ class AddStudentWidget extends StatelessWidget {
               ));
       return;
     }
-    print('$_name  and $_age or ');
+   print('$_name  and $_age or ${fetchControl.imageTemporary}');
     final _student = StudentModel(
         id: id,
         name: _name,
         age: int.parse(_age),
         standard: _std,
         address: _address,
-        profile: fetchControl.imageTemporary.toString());
-    id != null ? control.UpdateStudent(_student) : control.addStudent(_student);
+        profile: fetchControl.imageTemporary.value);
+        print("after name");
+control.UpdateStudent(_student);
+ fetchControl.imageTemporary.value='';
+ 
+ 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (ctx) => ScreenHome(),
+        builder: (ctx) => ScreenHome( currentSelected: fetchControl.indexChanged(0) ,data: null,),
       ),
     );
   }
 
-/*   Future<void> onUpdateStudentButton(id, BuildContext context) async {
+  Future<void> onAddStudentButton(BuildContext context) async {
     final _name = _nameController.text.trim();
     final _age =   _ageController.text.trim();
     final _std = _stdController.text.trim();
@@ -264,47 +262,26 @@ class AddStudentWidget extends StatelessWidget {
     if (_name.isEmpty ||
         _age.isEmpty ||
         _std.isEmpty ||
-        _address.isEmpty ||
-        fetchControl.student.imageTemporary == "" ) {
+        _address.isEmpty || edit==null && fetchControl.imageTemporary==''
+        ) {
      showDialog(context: context, builder: (ctx)=>  AlertDialog(title: Text("Some Error occured"),));
        return;
     }
-    print('$_name  and $_age or ');
+    print('$_name  and $_age or ${fetchControl.imageTemporary}');
     final _student = StudentModel(
-        id: id,
         name: _name,
         age: int.parse(_age) ,
         standard: _std,
         address: _address,
-        profile: fetchControl.student.imageTemporary);
-    UpdateStudent(_student);
-    
+        profile: fetchControl.imageTemporary.value);
+     control.addStudent(_student);
+    fetchControl.imageTemporary.value='';
+
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
-                                        builder: (ctx) => ScreenHome(),
+                                        builder: (ctx) => ScreenHome(data: null, currentSelected: 0,),
                                       ),
                                     );
-  }
- */
-  Future<void> DataInsetion(studentid) async {
-    //  int counter=0;
-    print("777 $studentid");
-    if (studentid == null || studentid == 0) {
-      //  fetchControl.student.imageTemporary="" ;
-      return;
-    }
-    final student = await control.FetchData(studentid);
-    print("returned from fetching");
-    print(student);
-
-    _nameController.text = student.name;
-    _ageController.text = student.age.toString();
-    _stdController.text = student.standard;
-    _addressController.text = student.address;
-    // fetchControl.student.imageTemporary = await student.profile;
-    fetchControl.DataInsetion1(studentid);
-    print("777 this is temporary image $fetchControl.student.imageTemporary");
-    
   }
 
   Future<void> pickImage() async {
@@ -315,10 +292,7 @@ class AddStudentWidget extends StatelessWidget {
       }
       fetchControl.imageTemporary.value = await img.path;
       print(await fetchControl.imageTemporary);
-      // setState(() {});
-//       setState(){
-// this.image = fetchControl.student.imageTemporary;
-//       }
+
 
     } on PlatformException catch (e) {
       print('Failed to pick image : $e');
@@ -328,31 +302,15 @@ class AddStudentWidget extends StatelessWidget {
   Future<dynamic> pickCamera() async {
     try {
       final img = await ImagePicker().pickImage(source: ImageSource.camera);
-      // AlbumSaver.saveToAlbum(filePath: '/data/user/0/com.example.sql_flite/cache/', albumName: "YourAlbumName");
       if (img == null) {
         return;
       }
       fetchControl.imageTemporary.value = await img.path;
-      // setState(() {});
-      print("this is my temporary");
-      print(fetchControl.imageTemporary.value);
-//       setState(){
-// this.image = fetchControl.student.imageTemporary;
-//       }
+    
       return await fetchControl.imageTemporary.value;
     } on PlatformException catch (e) {
       print('Failed to pick image : $e');
     }
   }
 
-//   void showAlertDialogue(BuildContext context){
-//     print("inside alirt box");
-// AlertDialog alert = AlertDialog(
-//     title: Text("Simple Alert"),
-//     content: Text("This is an alert message."),
-//     actions: [
-
-//     ],
-//   );
-//   }
 }

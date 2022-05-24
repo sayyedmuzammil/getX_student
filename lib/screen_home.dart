@@ -47,7 +47,6 @@ class ScreenHome extends StatelessWidget {
                           selectedLabelStyle: TextStyle(),
                           currentIndex: fetchControl.currentSelected.value,
                       onTap: (newIndex) {
-                         
                         data=null;
                         fetchControl.imageTemporary.value='';
                         

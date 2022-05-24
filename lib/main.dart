@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sql_flite/Screen_main.dart';
 import 'mode/db_functions.dart';
 import 'screen_home.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ScreenHome(),
+      home: screen_main(),
     );
   }
 }
